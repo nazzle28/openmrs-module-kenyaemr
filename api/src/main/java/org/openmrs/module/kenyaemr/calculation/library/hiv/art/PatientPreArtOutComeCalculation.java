@@ -50,8 +50,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import static org.openmrs.module.kenyaemr.calculation.EmrCalculationUtils.daysSince;
-
 /**
  * Calculate possible patient outcomes at the end of the cohort period
  */
@@ -151,6 +149,9 @@ public class PatientPreArtOutComeCalculation extends AbstractPatientCalculation 
 					if(preArtOutcomes.containsValue("Died")){
 						status ="Died";
 					}
+					if(preArtOutcomes.containsValue("Initiated ART")){
+						status ="Initiated ART";
+					}
 				}
 				ret.put(ptId, new SimpleResult(status, this));
 			}
@@ -167,7 +168,7 @@ public class PatientPreArtOutComeCalculation extends AbstractPatientCalculation 
 			Date dateLost = null;
 			SimpleResult lastScheduledReturnDateResults = (SimpleResult) resultMap.get(ptId);
 			Date lastScheduledReturnDate = (Date) lastScheduledReturnDateResults.getValue();
-			if (lastScheduledReturnDate != null && (daysSince(lastScheduledReturnDate, context) > HivConstants.LOST_TO_FOLLOW_UP_THRESHOLD_DAYS) && !(isTransferOut.contains(ptId))) {
+			if (lastScheduledReturnDate != null && !(isTransferOut.contains(ptId))) {
 				dateLost = DateUtil.adjustDate(lastScheduledReturnDate, HivConstants.LOST_TO_FOLLOW_UP_THRESHOLD_DAYS, DurationUnit.DAYS );
 			}
 			ret.put(ptId, new SimpleResult(dateLost, this));
@@ -265,7 +266,7 @@ public class PatientPreArtOutComeCalculation extends AbstractPatientCalculation 
 			if (lastScheduledReturnDateResults != null) {
 				Date lastScheduledReturnDate = (Date) lastScheduledReturnDateResults.getValue();
 				if(lastScheduledReturnDate != null && !(isTransferOut.contains(ptId))) {
-					dateDefaulted = CoreUtils.dateAddDays(lastScheduledReturnDate, 3);
+					dateDefaulted = CoreUtils.dateAddDays(lastScheduledReturnDate, 30);
 				}
 			}
 

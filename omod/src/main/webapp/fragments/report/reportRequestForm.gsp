@@ -45,7 +45,7 @@
 			date.setYear(pickedDate[0]);
 			var results = date.setMonth(date.getMonth() + periodValue);
 			var today = new Date().getTime();
-			if(periodValue > 6 && results > today && periodValue <= 60) {
+			if(results > today && periodValue <= 60) {
 				kenyaui.openAlertDialog({
 					heading: 'Run report',
 					message: 'Insufficient follow-up time to run this report '
@@ -66,7 +66,7 @@
 		<div class="ke-field-label">Month</div>
 		<div class="ke-field-content">
 
-			${ ui.includeFragment("kenyaemr", "field/reportPeriod", [ pastMonths: 65 ]) }
+			${ ui.includeFragment("kenyaemr", "field/reportPeriod", [ pastMonths: 180 ]) }
 		</div>
 		<% } %>
 		<% params.each { name, param -> %>

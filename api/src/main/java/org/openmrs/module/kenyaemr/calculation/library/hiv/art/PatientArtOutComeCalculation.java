@@ -33,8 +33,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import static org.openmrs.module.kenyaemr.calculation.EmrCalculationUtils.daysSince;
-
 /**
  * Created by codehub on 06/07/15.
  */
@@ -233,7 +231,7 @@ public class PatientArtOutComeCalculation extends AbstractPatientCalculation {
             if (lastScheduledReturnDateResults != null) {
                 Date lastScheduledReturnDate = (Date) lastScheduledReturnDateResults.getValue();
                 if(!(isTransferOut.contains(ptId)) && lastScheduledReturnDate != null) {
-                    dateDefaulted = CoreUtils.dateAddDays(lastScheduledReturnDate, 3);
+                    dateDefaulted = CoreUtils.dateAddDays(lastScheduledReturnDate, 30);
                 }
             }
 
@@ -251,8 +249,9 @@ public class PatientArtOutComeCalculation extends AbstractPatientCalculation {
 
             SimpleResult lastScheduledReturnDateResults = (SimpleResult) resultMap.get(ptId);
             Date lastScheduledReturnDate = (Date) lastScheduledReturnDateResults.getValue();
-            if (lastScheduledReturnDate != null && (daysSince(lastScheduledReturnDate, context) > HivConstants.LOST_TO_FOLLOW_UP_THRESHOLD_DAYS) && !(isTransferOut.contains(ptId))) {
+            if (lastScheduledReturnDate != null && !(isTransferOut.contains(ptId))) {
                 classifiedLTFU = DateUtil.adjustDate(lastScheduledReturnDate, HivConstants.LOST_TO_FOLLOW_UP_THRESHOLD_DAYS, DurationUnit.DAYS );
+
             }
 
             ret.put(ptId, new SimpleResult(classifiedLTFU, this));
